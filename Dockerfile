@@ -11,7 +11,7 @@ ENV LIBSODIUM_TAR /libsodium.tar.gz
 
 RUN mkdir /libsodium && \
         cd /libsodium && \
-    curl -kLo "${LIBSODIUM_TAR}" "${LIBSODIUM_URL} && \
+    curl -kLo "${LIBSODIUM_TAR}" "${LIBSODIUM_URL}" && \
         tar xvzf "${LIBSODIUM_TAR}" --strip-components=1 --directory=. && \
     ./configure && \
         make && \
