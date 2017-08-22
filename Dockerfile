@@ -20,10 +20,10 @@ RUN mkdir /libsodium && \
         make check && \
         make install && \
     mv src/libsodium /usr/local/ && \
-        rm -rf /libsodium && \
     pecl install libsodium-${PECL_LIBSODIUM_VERSION} && \
         docker-php-ext-configure libsodium && \
-        docker-php-ext-install libsodium
+        docker-php-ext-install libsodium && \
+    cd / && rm -rf /libsodium
 
 # Composer
 RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && \
