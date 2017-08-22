@@ -5,7 +5,9 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 # Libsodium
-ENV LIBSODIUM_VERSION 1.0.13
+ENV LIBSODIUM_VERSION      1.0.13
+ENV PECL_LIBSODIUM_VERSION 2.0.4
+
 ENV LIBSODIUM_URL https://download.libsodium.org/libsodium/releases/libsodium-${LIBSODIUM_VERSION}.tar.gz
 ENV LIBSODIUM_TAR /libsodium.tar.gz
 
@@ -19,7 +21,7 @@ RUN mkdir /libsodium && \
         make install && \
     mv src/libsodium /usr/local/ && \
         rm -rf /libsodium && \
-    pecl install libsodium-${LIBSODIUM_VERSION} && \
+    pecl install libsodium-${PECL_LIBSODIUM_VERSION} && \
         docker-php-ext-configure libsodium && \
         docker-php-ext-install libsodium
 
