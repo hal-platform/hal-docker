@@ -18,6 +18,8 @@ RUN apt-get update && \
     apt-get install -y ${BASE_PACKAGES} ${PHP_DEPENDENCIES} && \
     rm -rf /var/lib/apt/lists/* && \
     \
+    docker-php-ext-configure ldap --with-libdir=lib/x86_64-linux-gnu/ && \
+    \
     docker-php-ext-install ${PHP_EXTENSIONS} && \
     \
     pecl install ${PECL_EXTENSIONS} && \
