@@ -2,10 +2,10 @@ FROM php:7.1.8
 
 # Base PHP configuration
 ENV BASE_PACKAGES         "git"
-ENV PHP_DEPENDENCIES      "libmemcached-dev libpq-dev libsqlite3-dev zlib1g-dev"
+ENV PHP_DEPENDENCIES      "libmemcached-dev libpq-dev libsqlite3-dev zlib1g-dev libldap2-dev"
 ENV PHP_DEPENDENCIES_KEEP "libmemcached11 libmemcachedutil2 libpq5"
 
-ENV PHP_EXTENSIONS        "mbstring opcache pdo pdo_mysql pdo_pgsql pdo_sqlite zip zlib"
+ENV PHP_EXTENSIONS        "mbstring opcache pdo pdo_mysql pdo_pgsql pdo_sqlite zip zlib ldap"
 ENV PECL_EXTENSIONS       "memcached"
 
 # OMG PHP really? https://github.com/docker-library/php/issues/233
