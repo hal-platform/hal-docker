@@ -9,6 +9,7 @@ RUN apt-get update && \
         libsodium-dev
 
 RUN docker-php-ext-install \
+        mbstring \
         pdo_mysql && \
     \
     pecl install \
