@@ -1,14 +1,28 @@
 FROM php:5.6.7
 
+# Buildpack
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        git \
+        openssh-client \
+        bzip2 \
+        ca-certificates \
+        curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# PHP
+
 RUN apt-get update && \
     \
     apt-get install -y --no-install-recommends \
         libldap2-dev \
         libldb-dev \
         libmcrypt-dev \
-        libsodium-dev
+        libsodium-dev \
+        zlib1g-dev
 
 RUN docker-php-ext-install \
+        zip \
         mbstring \
         pdo_mysql && \
     \
