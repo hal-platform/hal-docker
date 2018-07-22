@@ -1,0 +1,55 @@
+FROM debian:stretch-slim
+
+ENV PHP_VERSION      7.1
+ENV COMPOSER_VERSION 1.6.3
+ENV DEBIAN_FRONTEND  noninteractive
+
+# Install system and php dependencies
+RUN apt-get update && \
+    apt-get install -y \
+        bzip2 \
+        curl \
+        apt-transport-https \
+        ca-certificates \
+    && \
+    curl -sS \
+        -o /etc/apt/trusted.gpg.d/php.gpg \
+        https://packages.sury.org/php/apt.gpg \
+    && \
+    echo "deb https://packages.sury.org/php/ stretch main" | tee \
+        /etc/apt/sources.list.d/php.list \
+    && \
+    apt-get update && \
+    mkdir -p /usr/share/man/man1 && \
+    mkdir -p /usr/share/man/man7 && \
+    apt-get install -y \
+        php${PHP_VERSION} \
+        php${PHP_VERSION}-curl \
+        php${PHP_VERSION}-fpm \
+        php${PHP_VERSION}-ldap \
+        php${PHP_VERSION}-mbstring \
+        php${PHP_VERSION}-mysql \
+        php${PHP_VERSION}-opcache \
+        php${PHP_VERSION}-pgsql \
+        php${PHP_VERSION}-phpdbg \
+        php${PHP_VERSION}-sodium \
+        php${PHP_VERSION}-sqlite3 \
+        php${PHP_VERSION}-xml \
+        php${PHP_VERSION}-zip \
+    && rm -rf "/var/lib/apt/lists/*"
+
+# Install composer
+RUN curl -sSo /tmp/composer-setup.php \
+        https://getcomposer.org/installer \
+        && \
+    curl -sSo /tmp/composer-setup.sig \
+        https://composer.github.io/installer.sig \
+        && \
+    php -r "if (hash('SHA384', file_get_contents('/tmp/composer-setup.php')) !== trim(file_get_contents('/tmp/composer-setup.sig'))) { unlink('/tmp/composer-setup.php'); echo 'Invalid installer' . PHP_EOL; exit(1); }" \
+        && \
+    php /tmp/composer-setup.php \
+        --version=${COMPOSER_VERSION} \
+        --filename=composer \
+        --install-dir=bin \
+        && \
+    rm -f "/tmp/composer-setup.*"
