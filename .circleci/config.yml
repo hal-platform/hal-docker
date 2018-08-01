@@ -72,5 +72,11 @@ jobs:
           - DOCKER_PATH: './frontend'
           - DOCKER_TAG: 'halplatform/php:frontend'
 
+    build_3x_frontend_web:
+        <<: *build_image
+        environment:
+          - DOCKER_PATH: './frontend-web'
+          - DOCKER_TAG: 'halplatform/php:frontend-web'
+
     fan_in_1:
         <<: *fan_in
