@@ -54,6 +54,7 @@ workflows:
                     - build_2x
                     - build_3x_frontend
                     - build_3x_frontend_web
+                    - build_3x_frontend_ci
 
 jobs:
 
@@ -80,6 +81,12 @@ jobs:
         environment:
           - DOCKER_PATH: './frontend-web'
           - DOCKER_TAG: 'halplatform/php:frontend-web'
+
+    build_3x_frontend_ci:
+        <<: *build_image
+        environment:
+          - DOCKER_PATH: './frontend-ci'
+          - DOCKER_TAG: 'halplatform/php:frontend-ci'
 
     fan_in_1:
         <<: *fan_in
