@@ -48,6 +48,8 @@ workflows:
                 requires: [ fetch_code ]
             - build_3x_frontend_web:
                 requires: [ fetch_code ]
+            - build_3x_frontend_ci:
+                requires: [ fetch_code ]
 
             - fan_in_1:
                 requires:
