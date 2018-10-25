@@ -28,7 +28,7 @@ RUN docker-php-ext-install \
     \
     pecl install \
         libsodium-1.0.6 \
-        xdebug && \
+        xdebug-2.5.5 && \
     \
     echo "zend_extension=xdebug.so" > "$(php-config --prefix)/etc/php/conf.d/xdebug.ini" && \
     echo "extension=libsodium.so" > "$(php-config --prefix)/etc/php/conf.d/libsodium.ini"
