@@ -1,4 +1,4 @@
-FROM php:7.1.8
+FROM php:7.3.4
 
 # Base PHP configuration
 ENV BASE_PACKAGES         "git"
