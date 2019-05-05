@@ -42,8 +42,6 @@ workflows:
                 filters:
                     branches: { only: master }
 
-            - build_2x:
-                requires: [ fetch_code ]
             - build_3x_frontend:
                 requires: [ fetch_code ]
             - build_3x_frontend_web:
@@ -53,7 +51,6 @@ workflows:
 
             - fan_in_1:
                 requires:
-                    - build_2x
                     - build_3x_frontend
                     - build_3x_frontend_web
                     - build_3x_frontend_ci
@@ -65,12 +62,6 @@ jobs:
         steps:
             - checkout
             - *persist_workspace
-
-    build_2x:
-        <<: *build_image
-        environment:
-          - DOCKER_PATH: './2x'
-          - DOCKER_TAG: 'halplatform/php:2x'
 
     build_3x_frontend:
         <<: *build_image
