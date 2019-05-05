@@ -1,6 +1,6 @@
 FROM debian:stretch-slim
 
-ENV PHP_VERSION      7.1
+ENV PHP_VERSION      7.3
 ENV COMPOSER_VERSION 1.6.3
 ENV DEBIAN_FRONTEND  noninteractive
 
