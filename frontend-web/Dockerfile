@@ -31,7 +31,6 @@ RUN apt-get update && \
         php${PHP_VERSION}-opcache \
         php${PHP_VERSION}-pgsql \
         php${PHP_VERSION}-phpdbg \
-        php${PHP_VERSION}-sodium \
         php${PHP_VERSION}-sqlite3 \
         php${PHP_VERSION}-xml \
         php${PHP_VERSION}-zip \
