@@ -1,6 +1,6 @@
 FROM nginx:1.15.1
 
-ENV PHP_VERSION 7.1
+ENV PHP_VERSION 7.3
 
 # Install system and php dependencies
 RUN apt-get update && \
