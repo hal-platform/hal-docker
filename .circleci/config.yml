@@ -1,9 +1,13 @@
-version: 2
+version: 2.1
 
-defaults: &defaults
+orbs:
+  docker: circleci/docker@0.5.20
+
+executors:
+  default_executor:
     working_directory: '~/project'
     docker:
-        - image: 'docker:17.05.0-ce-git'
+      - image: 'circleci/python:3.7'
 
 attach_workspace: &attach_workspace
     attach_workspace:
@@ -19,20 +23,20 @@ fan_in: &fan_in
     steps: [ { run: 'whoami' } ]
 
 build_image: &build_image
-    <<: *defaults
+    executor: default_executor
     steps:
         - *attach_workspace
         - setup_remote_docker
-        - run: 'docker login -u $DOCKER_USER -p $DOCKER_PASS'
-        - run:
-            name: 'Build docker image'
-            command: |
-                cd "${DOCKER_PATH}" && \
-                docker build -t "${DOCKER_TAG}" .
-        - run:
-            name: 'Push docker image'
-            command: |
-                docker push "${DOCKER_TAG}"
+        - docker/check:
+            docker-username: DOCKER_USER
+            docker-password: DOCKER_PASS
+        - docker/build:
+            path: "${DOCKER_PATH}"
+            image: "halplatform/php"
+            tag: "${DOCKER_TAG}"
+        - docker/push:
+            image: "halplatform/php"
+            tag: "${DOCKER_TAG}"
 
 workflows:
     version: 2
@@ -58,28 +62,22 @@ workflows:
 jobs:
 
     fetch_code:
-        <<: *defaults
+        executor: default_executor
         steps:
             - checkout
             - *persist_workspace
 
     build_3x_frontend:
         <<: *build_image
-        environment:
-          - DOCKER_PATH: './frontend'
-          - DOCKER_TAG: 'halplatform/php:frontend'
+        environment: [ { DOCKER_PATH: './frontend', DOCKER_TAG: 'frontend' } ]
 
     build_3x_frontend_web:
         <<: *build_image
-        environment:
-          - DOCKER_PATH: './frontend-web'
-          - DOCKER_TAG: 'halplatform/php:frontend-web'
+        environment: [ { DOCKER_PATH: './frontend-web', DOCKER_TAG: 'frontend-web' } ]
 
     build_3x_frontend_ci:
         <<: *build_image
-        environment:
-          - DOCKER_PATH: './frontend-ci'
-          - DOCKER_TAG: 'halplatform/php:frontend-ci'
+        environment: [ { DOCKER_PATH: './frontend-ci', DOCKER_TAG: 'frontend-ci' } ]
 
     fan_in_1:
         <<: *fan_in
