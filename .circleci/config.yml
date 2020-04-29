@@ -60,7 +60,6 @@ workflows:
                     - build_3x_frontend_ci
 
 jobs:
-
     fetch_code:
         executor: default_executor
         steps:
