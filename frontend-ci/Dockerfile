@@ -1,8 +1,10 @@
-FROM debian:stretch-slim
+FROM debian:buster-slim
 
 ENV PHP_VERSION      7.3
 ENV COMPOSER_VERSION 1.6.3
 ENV DEBIAN_FRONTEND  noninteractive
+
+ARG APCU_VERSION="5.1.18"
 
 # Install system and php dependencies
 RUN apt-get update && \
@@ -16,7 +18,7 @@ RUN apt-get update && \
         -o /etc/apt/trusted.gpg.d/php.gpg \
         https://packages.sury.org/php/apt.gpg \
     && \
-    echo "deb https://packages.sury.org/php/ stretch main" | tee \
+    echo "deb https://packages.sury.org/php/ buster main" | tee \
         /etc/apt/sources.list.d/php.list \
     && \
     apt-get update && \
@@ -24,6 +26,7 @@ RUN apt-get update && \
     mkdir -p /usr/share/man/man7 && \
     apt-get install -y \
         php${PHP_VERSION} \
+        php${PHP_VERSION}-dev \
         php${PHP_VERSION}-curl \
         php${PHP_VERSION}-fpm \
         php${PHP_VERSION}-ldap \
@@ -35,6 +38,9 @@ RUN apt-get update && \
         php${PHP_VERSION}-sqlite3 \
         php${PHP_VERSION}-xml \
         php${PHP_VERSION}-zip \
+    && \
+    pecl install "apcu-${APCU_VERSION}" \
+    echo 'extension=apcu.so' > /etc/php/${PHP_VERSION}/cli/conf.d/20-apcu.ini \
     && rm -rf "/var/lib/apt/lists/*"
 
 # Install composer
