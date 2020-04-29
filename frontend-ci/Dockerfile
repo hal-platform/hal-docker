@@ -40,6 +40,7 @@ RUN apt-get update && \
         php${PHP_VERSION}-zip \
     && \
     pecl install "apcu-${APCU_VERSION}" \
+    && \
     echo 'extension=apcu.so' > /etc/php/${PHP_VERSION}/cli/conf.d/20-apcu.ini \
     && rm -rf "/var/lib/apt/lists/*"
 
