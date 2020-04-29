@@ -19,7 +19,7 @@ persist_workspace: &persist_workspace
         paths: [ '.' ]
 
 fan_in: &fan_in
-    <<: *defaults
+    executor: default_executor
     steps: [ { run: 'whoami' } ]
 
 build_image: &build_image
