@@ -5,6 +5,7 @@ ENV COMPOSER_VERSION 1.6.3
 ENV DEBIAN_FRONTEND  noninteractive
 
 ARG APCU_VERSION="5.1.18"
+ARG PHPREDIS_VERSION="5.3.1"
 
 # Install system and php dependencies
 RUN apt-get update && \
@@ -41,7 +42,11 @@ RUN apt-get update && \
     && \
     pecl install "apcu-${APCU_VERSION}" \
     && \
+    pecl install "redis-${PHPREDIS_VERSION}" \
+    && \
     echo 'extension=apcu.so' > /etc/php/${PHP_VERSION}/cli/conf.d/20-apcu.ini \
+    && \
+    echo 'extension=redis.so' > /etc/php/${PHP_VERSION}/cli/conf.d/30-redis.ini \
     && rm -rf "/var/lib/apt/lists/*"
 
 # Install composer
