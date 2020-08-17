@@ -5,6 +5,8 @@ PHP Container:
 - LDAP
 - PECL Libsodium `2.0.4`
 - PECL Memcached
+- PECL Redis `5.3.1`
+- PECL APCu
 - Opcache
 - PDO MySQL
 - PDO PgSQL
