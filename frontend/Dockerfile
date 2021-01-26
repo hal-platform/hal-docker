@@ -1,8 +1,8 @@
 FROM debian:stretch-slim
 
-ENV PHP_VERSION      7.3
-ENV COMPOSER_VERSION 1.6.3
-ENV DEBIAN_FRONTEND  noninteractive
+ENV PHP_VERSION="7.3"
+ENV COMPOSER_VERSION="1.10.19"
+ENV DEBIAN_FRONTEND="noninteractive"
 
 # Install system and php dependencies
 RUN apt-get update && \
