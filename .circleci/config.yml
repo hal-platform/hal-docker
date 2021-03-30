@@ -3,80 +3,88 @@ version: 2.1
 orbs:
   docker: circleci/docker@0.5.20
 
-executors:
-  default_executor:
-    working_directory: '~/project'
-    docker:
-      - image: 'circleci/python:3.7'
-
-attach_workspace: &attach_workspace
-    attach_workspace:
-        at: '.'
-
-persist_workspace: &persist_workspace
-    persist_to_workspace:
-        root: '.'
-        paths: [ '.' ]
-
-fan_in: &fan_in
-    executor: default_executor
-    steps: [ { run: 'whoami' } ]
-
-build_image: &build_image
-    executor: default_executor
-    steps:
-        - *attach_workspace
-        - setup_remote_docker
-        - docker/check:
-            docker-username: DOCKER_USER
-            docker-password: DOCKER_PASS
-        - docker/build:
-            path: "${DOCKER_PATH}"
-            image: "halplatform/php"
-            tag: "${DOCKER_TAG}"
-        - docker/push:
-            image: "halplatform/php"
-            tag: "${DOCKER_TAG}"
+filter__master: &filter__master
+    filters:
+        branches:
+            only: [ 'master' ]
 
 workflows:
     version: 2
     pipeline:
         jobs:
             - fetch_code:
-                filters:
-                    branches: { only: master }
+                <<: *filter__master
 
-            - build_3x_frontend:
-                requires: [ fetch_code ]
-            - build_3x_frontend_web:
-                requires: [ fetch_code ]
-            - build_3x_frontend_ci:
+            - build_image:
+                name: 'build_ci_73'
+                path: './ci-7.3'
+                docker-tag: 'ci-7.3'
                 requires: [ fetch_code ]
 
-            - fan_in_1:
+            - build_image:
+                name: 'build_ci_80'
+                path: './ci-8.0'
+                docker-tag: 'ci-8.0'
+                requires: [ fetch_code ]
+
+            - fan_in:
+                name: 'pipeline-is-finished'
                 requires:
-                    - build_3x_frontend
-                    - build_3x_frontend_web
-                    - build_3x_frontend_ci
+                    - build_ci_73
+                    - build_ci_80
+
+executors:
+  default_executor:
+    working_directory: '~/project'
+    docker:
+      - image: 'circleci/python:3.7'
+
+commands:
+    attach_workspace_at_root:
+        steps:
+            - attach_workspace:
+                at: '.'
+
+    persist_to_root_workspace:
+        parameters:
+            paths:
+                type: string
+        steps:
+            - persist_to_workspace:
+                root: '.'
+                paths: [ '<< parameters.paths >>' ]
 
 jobs:
     fetch_code:
         executor: default_executor
         steps:
             - checkout
-            - *persist_workspace
+            - persist_to_root_workspace:
+                paths: '.'
 
-    build_3x_frontend:
-        <<: *build_image
-        environment: [ { DOCKER_PATH: './frontend', DOCKER_TAG: 'frontend' } ]
+    fan_in:
+        executor: default_executor
+        steps: [ { run: 'whoami' } ]
 
-    build_3x_frontend_web:
-        <<: *build_image
-        environment: [ { DOCKER_PATH: './frontend-web', DOCKER_TAG: 'frontend-web' } ]
+    build_image:
+        parameters:
+            path:
+                type: string
+            docker-tag:
+                type: string
 
-    build_3x_frontend_ci:
-        <<: *build_image
-        environment: [ { DOCKER_PATH: './frontend-ci', DOCKER_TAG: 'frontend-ci' } ]
+        executor: default_executor
 
-    fan_in_1:
-        <<: *fan_in
+        steps:
+            - attach_workspace_at_root
+            - setup_remote_docker
+            - docker/check:
+                docker-username: DOCKER_USER
+                docker-password: DOCKER_PASS
+            - docker/build:
+                path: '<< parameters.path >>'
+                image: 'halplatform/php'
+                tag: '<< parameters.docker-tag >>'
+            - docker/push:
+                image: 'halplatform/php'
+                tag: '<< parameters.docker-tag >>'

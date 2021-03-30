@@ -1,11 +1,12 @@
 ## Hal docker environments
 
+This repository contains build environments for the CI environment of Hal.
+
 PHP Container:
-- PHP `7.3.4`
+- PHP `8.0`
 - LDAP
-- PECL Libsodium `2.0.4`
-- PECL Memcached
-- PECL Redis `5.3.1`
+- Sodium
+- PECL Redis
 - PECL APCu
 - Opcache
 - PDO MySQL
